@@ -1,31 +1,67 @@
 // index.js
-
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, globalShortcut } = require('electron');
 const path = require('path');
 
-let win; // Make win accessible to `updateUrlInput`
+let win; // Make win accessible outside createWindow
+
 function createWindow() {
     win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: false, // important to prevent preload script from accessing node
-            contextIsolation: true, // important for security
+            nodeIntegration: false, // Disable nodeIntegration for security
+            contextIsolation: true, // Enable context isolation for security
         }
     });
-    win.loadFile(path.join(__dirname, 'index.html'));
-    
-    win.webContents.on('did-navigate', (event, url) => {
-        win.webContents.send('url-changed', url);
-    });
 
-    win.webContents.on('did-finish-load', () => {
-        win.webContents.send('url-changed', win.webContents.getURL());
-    });
+    // Load the HTML file which contains the address bar
+    win.loadFile('index.html');
+
+     // Register F12 shortcut
+     globalShortcut.register('F12', () => {
+       win.toggleDevTools();
+     });
+
+
+    // Menu
+    const mainMenuTemplate = [
+         {
+            label: 'Edit',
+            submenu: [
+              {
+                label: 'Quit',
+                accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+                click() {
+                  app.quit();
+                }
+              }
+            ],
+          },
+        {
+          label: 'Dev Tools',
+          submenu: [
+            {
+              label: 'Reload Page',
+              accelerator: 'CommandOrControl+R',
+              click(){
+                win.reload();
+              }
+            },
+             {
+              label: 'Show Dev Tools',
+              accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+              click(){
+                win.toggleDevTools();
+              }
+            },
+
+          ]
+        }
+      ];
+      const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+      Menu.setApplicationMenu(mainMenu);
 }
-
-
 
 app.whenReady().then(() => {
     createWindow();
@@ -43,7 +79,14 @@ app.on('window-all-closed', () => {
     }
 });
 
-
+// Listen for URL navigation requests from renderer
 ipcMain.on('load-url', (event, url) => {
-   win.loadURL(url);
+    // Basic URL validation (add more if required)
+  let urlToLoad = url;
+
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    urlToLoad = 'http://' + url;
+  }
+
+  win.loadURL(urlToLoad);
 });
