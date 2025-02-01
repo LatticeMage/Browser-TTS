@@ -16,7 +16,7 @@ config.read('config.ini')
 # Get configurations from the INI file
 try:
     gecko_driver_path = config.get('Settings', 'gecko_driver_path')
-    kakuyomu_url = config.get('Settings', 'kakuyomu_url')
+    read_url = config.get('Settings', 'read_url')
 except configparser.Error as e:
     print(f"Error reading config.ini: {e}")
     exit()
@@ -42,7 +42,7 @@ except Exception as e:
 
 try:
     # Open the Kakuyomu page
-    driver.get(kakuyomu_url)
+    driver.get(read_url)
     time.sleep(3)
 
     driver.execute_script(js_code)  # Inject the JavaScript
