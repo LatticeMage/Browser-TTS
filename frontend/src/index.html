@@ -6,16 +6,12 @@
     <style>
       .address-bar {
         display: flex;
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
       }
       .address-bar input {
         flex: 1;
-        margin-right: 10px;
-        padding: 8px;
       }
       .main {
-          height: calc(100vh - 40px); /* Adjusted height to account for address bar, may require further adjustment*/
+          height: calc(100vh - 40px);
         overflow-y: auto;
       }
     </style>
@@ -29,19 +25,30 @@
        <webview id="webview" style="width:100%; height:100%;"></webview>
    </div>
    <script>
+     const webview = document.getElementById('webview');
+      const urlInput = document.getElementById('url-input');
+
       function loadURL() {
-          const url = document.getElementById('url-input').value;
-          const webview = document.getElementById('webview');
+          const url = urlInput.value;
           let urlToLoad = url;
 
-          // Basic URL validation (add more if required)
           if (!url.startsWith('http://') && !url.startsWith('https://')) {
               urlToLoad = 'http://' + url;
           }
           webview.src = urlToLoad;
-        // Optionally clear the input after loading
-        document.getElementById('url-input').value = '';
       }
+
+
+     webview.addEventListener('did-finish-load', () => {
+        urlInput.value = webview.getURL(); // Update input value after successful navigation
+     });
+
+
+     webview.addEventListener('will-navigate', (event) => {
+      urlInput.value = event.url;
+    });
+
+
 
    </script>
 </body>

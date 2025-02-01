@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu, globalShortcut } = require('electron');
 const path = require('path');
 
 let win; // Make win accessible outside createWindow
@@ -8,9 +8,6 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: false, // Disable nodeIntegration for security
-            contextIsolation: true, // Enable context isolation for security
             webviewTag: true // Enable <webview> tag support
         }
     });
