@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import pyttsx3
 import asyncio
+import threading
 
 app = FastAPI()
 
@@ -40,14 +41,19 @@ class TTSRequest(BaseModel):
 async def test_route():
     return {"message": "Hello, World!"}
 
+def tts_worker(text: str):
+        tts = _TTS()
+        try:
+             tts.start(text)
+        finally:
+             tts.close()
+
 @app.post("/tts/")
 async def speak_text(request_data: TTSRequest):
     try:
         text = request_data.text
-        tts = _TTS()  # Create a new _TTS instance for every request
-        tts.start(text)
-        tts.close()   #clean the resources
-        return JSONResponse(content={"message": "Text spoken successfully"}, status_code=200)
+        threading.Thread(target=tts_worker, args=(text,), daemon=True).start() #start the thead and die natively
+        return JSONResponse(content={"message": "Text processing started in background"}, status_code=200)
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -58,5 +64,4 @@ async def speak_text(request_data: TTSRequest):
 if __name__ == "__main__":
     import uvicorn
 
-    backend_port = 28641
-    uvicorn.run(app, host="0.0.0.0", port=backend_port, reload=True)
+    uvicorn.run(app, host="0.0.0.0", reload=True)
