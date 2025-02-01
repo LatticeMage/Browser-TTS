@@ -18,6 +18,9 @@ class _TTS:
         else:
             print("Japanese voice not found. Using default voice.")
 
+        # Set a slower rate (default rate may be around 200). Experiment for best result.
+        self.engine.setProperty('rate', 150)  # You can adjust this value
+
 
     def start(self,text_):
         self.engine.say(text_)
