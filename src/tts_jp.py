@@ -1,11 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-import pyttsx3
-import asyncio
-import threading
+# tts_jp.py
 
-app = FastAPI()
+import pyttsx3
+import threading
 
 class _TTS:
     engine = None
@@ -33,14 +29,6 @@ class _TTS:
              del(self.engine)
              self.engine = None
 
-class TTSRequest(BaseModel):
-    text: str
-
-
-@app.get("/test/")
-async def test_route():
-    return {"message": "Hello, World!"}
-
 def tts_worker(text: str):
         tts = _TTS()
         try:
@@ -48,20 +36,6 @@ def tts_worker(text: str):
         finally:
              tts.close()
 
-@app.post("/tts/")
-async def speak_text(request_data: TTSRequest):
-    try:
-        text = request_data.text
-        threading.Thread(target=tts_worker, args=(text,), daemon=True).start() #start the thead and die natively
-        return JSONResponse(content={"message": "Text processing started in background"}, status_code=200)
-    except Exception as e:
-        print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
-# Run the app using Uvicorn
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", reload=True)
+def speak_text(text: str):
+    threading.Thread(target=tts_worker, args=(text,), daemon=True).start()
+    print(f"start speaking:{text}")

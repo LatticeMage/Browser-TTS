@@ -1,3 +1,4 @@
+config.ini
 workspace/
 temp/
 *.log
@@ -174,3 +175,4 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
