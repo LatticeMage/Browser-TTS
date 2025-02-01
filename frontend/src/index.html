@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Browser</title>
+</head>
+<body>
+  <div class="address-bar">
+      <input type="text" id="url-input" placeholder="Enter URL here">
+      <button onclick="loadURL()">→</button>
+    </div>
+   <div class="main">
+      <p>Welcome! Type address on the address bar then press enter to browse</p>
+   </div>
+   <script>
+     function loadURL() {
+        const url = document.getElementById('url-input').value;
+        window.electron.loadURL(url);
+     }
+   </script>
+</body>
+</html>

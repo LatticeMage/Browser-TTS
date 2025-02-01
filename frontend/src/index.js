@@ -1,4 +1,3 @@
-// index.js
 const { app, BrowserWindow, ipcMain, Menu, globalShortcut } = require('electron');
 const path = require('path');
 
@@ -16,7 +15,7 @@ function createWindow() {
     });
 
     // Load the HTML file which contains the address bar
-    win.loadFile('index.html');
+    win.loadFile(path.join(__dirname, 'index.html'));
 
      // Register F12 shortcut
      globalShortcut.register('F12', () => {

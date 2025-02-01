@@ -10,9 +10,13 @@
   },
   "build": {
     "appId": "posetmage.tts",
-    "win": {
+     "win": {
       "icon": "build/icon.ico"
-    }
+    },
+    "files": [
+        "src/**/*",
+         "build/**/*"
+    ]
   },
   "keywords": [],
   "author": "",
