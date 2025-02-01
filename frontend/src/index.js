@@ -11,6 +11,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false, // Disable nodeIntegration for security
             contextIsolation: true, // Enable context isolation for security
+            webviewTag: true // Enable <webview> tag support
         }
     });
 
@@ -76,16 +77,4 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-});
-
-// Listen for URL navigation requests from renderer
-ipcMain.on('load-url', (event, url) => {
-    // Basic URL validation (add more if required)
-  let urlToLoad = url;
-
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    urlToLoad = 'http://' + url;
-  }
-
-  win.loadURL(urlToLoad);
 });

@@ -3,20 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Simple Browser</title>
+    <style>
+      .address-bar {
+        display: flex;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      .address-bar input {
+        flex: 1;
+        margin-right: 10px;
+        padding: 8px;
+      }
+      .main {
+          height: calc(100vh - 40px); /* Adjusted height to account for address bar, may require further adjustment*/
+        overflow-y: auto;
+      }
+    </style>
 </head>
 <body>
   <div class="address-bar">
       <input type="text" id="url-input" placeholder="Enter URL here">
       <button onclick="loadURL()">→</button>
     </div>
-   <div class="main">
-      <p>Welcome! Type address on the address bar then press enter to browse</p>
+    <div class="main">
+       <webview id="webview" style="width:100%; height:100%;"></webview>
    </div>
    <script>
-     function loadURL() {
-        const url = document.getElementById('url-input').value;
-        window.electron.loadURL(url);
-     }
+      function loadURL() {
+          const url = document.getElementById('url-input').value;
+          const webview = document.getElementById('webview');
+          let urlToLoad = url;
+
+          // Basic URL validation (add more if required)
+          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+              urlToLoad = 'http://' + url;
+          }
+          webview.src = urlToLoad;
+        // Optionally clear the input after loading
+        document.getElementById('url-input').value = '';
+      }
+
    </script>
 </body>
 </html>
