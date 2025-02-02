@@ -28,16 +28,16 @@ class _TTS:
 
     def close(self):
         if self.engine:
-             self.engine.stop()
-             del(self.engine)
-             self.engine = None
+            self.engine.stop()
+            del(self.engine)
+            self.engine = None
 
 def tts_worker(text: str):
         tts = _TTS()
         try:
-             tts.start(text)
+            tts.start(text)
         finally:
-             tts.close()
+            tts.close()
 
 def speak_text(text: str):
     threading.Thread(target=tts_worker, args=(text,), daemon=True).start()

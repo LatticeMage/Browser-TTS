@@ -18,7 +18,7 @@ function createSpeakButton(range) {
     speakButton.innerHTML = "Speak";
     speakButton.style.position = 'absolute';
     speakButton.style.left =  (lastRect.right + window.scrollX) + 'px';
-    speakButton.style.top = (lastRect.top + window.scrollY) + 'px';
+    speakButton.style.top = (lastRect.top + window.scrollY) + 10 + 'px';
     speakButton.style.zIndex = 1000;
     document.body.appendChild(speakButton);
 

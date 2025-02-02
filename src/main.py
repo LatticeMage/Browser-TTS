@@ -50,10 +50,10 @@ try:
 
         # Wait for speakText to be set or changed
         try:
-           WebDriverWait(driver, 10).until(lambda d: d.execute_script("return window.speakText != undefined;"))
+            WebDriverWait(driver, 10).until(lambda d: d.execute_script("return window.speakText != undefined;"))
         except Exception as e:
-             print(f"Timeout or unexpected error while waiting for window.speakText: {e}")
-             continue
+            print(f"Timeout or unexpected error while waiting for window.speakText: {e}")
+            continue
 
         selected_text = driver.execute_script("return window.speakText;")
 
