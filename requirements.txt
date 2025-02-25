@@ -1,4 +1,4 @@
 pyttsx3
-fastapi
-uvicorn
+flask
+flask-cors
 selenium

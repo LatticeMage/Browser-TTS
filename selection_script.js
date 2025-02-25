@@ -12,7 +12,7 @@ function createSpeakButton(range) {
 
     // If there are rects get the last one in the list which is the rect for
     // the last line of the selection.
-     var lastRect = rects.length > 0 ? rects[rects.length - 1] : range.getBoundingClientRect()
+    var lastRect = rects.length > 0 ? rects[rects.length - 1] : range.getBoundingClientRect()
 
     speakButton = document.createElement("button");
     speakButton.innerHTML = "Speak";
@@ -23,6 +23,27 @@ function createSpeakButton(range) {
     document.body.appendChild(speakButton);
 
     return speakButton
+}
+
+async function speak(text) {
+    try {
+        const response = await fetch('http://localhost:5000/speak', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('TTS Server Response:', data);
+    } catch (error) {
+        console.error('Error sending text to TTS server:', error);
+    }
 }
 
 function handleSelectionChange() {
@@ -44,23 +65,18 @@ function handleSelectionChange() {
 
             newButton.addEventListener('click', function() {
                 var text = selection.toString();
-            
-                // Send text to python
-                window.speakText = text;
-            
+                speak(text); // Send text to TTS server
+
                 newButton.remove();
+                speakButton = null;
             });
         } else if(speakButton){
             speakButton.remove();
-            speakButton = null
-            window.speakText = ""
-        } else{
-            window.speakText = ""
+            speakButton = null;
         }
     } else if (speakButton){
         speakButton.remove();
-        speakButton = null
-        window.speakText = ""
+        speakButton = null;
     }
 }
 
