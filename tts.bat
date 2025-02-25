@@ -1,1 +1,1 @@
-python src/main.py
+call cmd /k "conda activate selenium && python src/main.py"
