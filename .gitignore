@@ -1,3 +1,4 @@
+*.bat
 config.ini
 workspace/
 temp/

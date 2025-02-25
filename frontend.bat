@@ -1,1 +1,0 @@
-call cmd /k "conda activate selenium && python src/frontend.py"
